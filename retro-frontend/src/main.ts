@@ -54,7 +54,7 @@ async function renderBoard() {
 }
 
 function renderColumn(col: Column, allCols: Column[]): HTMLElement {
-  const checklistIds = ['me','home','family','ideal','holidays'];
+  const checklistIds = ['day','me','home','family','ideal','holidays'];
   const colDiv = createElem('div', ['column']);
   colDiv.id = `col-${col.id}`;
   colDiv.classList.add(`column--${col.id}`);
@@ -96,7 +96,7 @@ function renderColumn(col: Column, allCols: Column[]): HTMLElement {
   });
   colDiv.append(ul);
 
-  const btn = createElem('button', [], 'Добавить');
+  const btn = createElem('button', [], '+');
   btn.addEventListener('click', async () => {
     const newTask = await promptTask();
     if (!newTask) return;
