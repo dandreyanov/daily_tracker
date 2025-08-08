@@ -87,7 +87,8 @@ body {
   font-weight: 300;      /* или 400, по вкусу */
   text-align: center;
   font-size: 1.3rem;
-  margin-bottom: 12px;
+  margin-bottom: 1px;
+  margin-top: 1px;
   color: var(--text-color);
 }
 
