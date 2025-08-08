@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap');
+
+/* Фоновый паттерн нежных пастельных точек */
+body {
+  /* базовый фон */
+  background-color: #f5f5f5;
+
+  /* два слоя радиальных градиентов для регулярной сетки точек */
+  background-image:
+          radial-gradient(circle at 1px 1px, rgba(255,128,171,0.2) 1px, transparent 0),
+          radial-gradient(circle at 1px 1px, rgba(255,128,171,0.2) 1px, transparent 0);
+
+  /* шаг сетки */
+  background-size: 20px 20px;
+}
+
+
+/* 1) Подключаем Poppins */
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 2) CSS-переменные для пастельных цветов */
+:root {
+  --c-urgent:   #ffd3d3;
+  --c-important:#ffe1b5;
+  --c-today:    #e0d7ff;
+  --c-notimp:   #d3f8e2;
+
+  --c-day: #dcdcdc;
+  --c-me:       #cde7ff;
+  --c-home:     #ffebcd;
+  --c-family:   #ffd3f0;
+  --c-ideal:    #fff8cd;
+  --c-holidays: #d3efff;
+
+  --text-color: #333;
+  --btn-bg:     #ff80ab;
+  --btn-hover:  #ff4081;
+}
+
+/* 3) Общий контейнер доски */
+.board-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* 4) Колонка */
+.column {
+  width: 280px;        /* или любая другая нужная вам величина */
+  min-width: 280px;    /* чтобы она не съезжала на узких экранах */
+  max-width: 280px;    /* чтобы не растягивалась */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  color: var(--text-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* 5) Фоны по классам */
+.column--urgent    { background: var(--c-urgent);    }
+.column--important { background: var(--c-important); }
+.column--today     { background: var(--c-today);     }
+.column--notimp    { background: var(--c-notimp);    }
+
+.column--day        { background: var(--c-day);        }
+.column--me        { background: var(--c-me);        }
+.column--home      { background: var(--c-home);      }
+.column--family    { background: var(--c-family);    }
+.column--ideal     { background: var(--c-ideal);     }
+.column--holidays  { background: var(--c-holidays);  }
+
+/* 6) Hover-эффект для колонки */
+.column:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* 7) Заголовок */
+.column h3 {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+/* 8) Список задач */
+.task-list {
+  flex: 1;
+  list-style: none;
+  overflow-y: auto;
+  padding-right: 1px;
+  padding-left: 5px;
+  margin: 1px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;
+  font-size: 1rem; /* чуть меньше или больше по вкусу */
+}
+
+/* 9) Пункты со стилем и анимацией */
+.task-list li {
+  width: 85%;
+  padding: 8px 12px;
+  margin: 6px 0;
+  background: rgba(255,255,255,0.7);
+  border-radius: 8px;
+  cursor: grab;
+  position: relative;
+  transition: background 0.2s, transform 0.1s;
+}
+
+/* при наведении */
+.task-list li:hover {
+  background: rgba(255,255,255,0.9);
+  transform: translateX(4px);
+}
+
+/* зачёркнутый пункт */
+.task-list li.checked {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* 10) Кнопка */
+.column button {
+  margin-top: 12px;
+  padding: 8px;
+  border: none;
+  border-radius: 24px;
+  background: var(--btn-bg);
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* hover-кнопки */
+.column button:hover {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+}
+
+/* Стили кнопки удаления */
+.delete-btn {
+  position: absolute;
+  top: 15%;              /* середина по вертикали li */
+  right: 8px;            /* отступ от правого края карточки */
+  transform: translateY(-50%);  /* сдвиг вверх на половину своей высоты */
+
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  color: #888;
+  transition: background 0.2s, color 0.2s;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: #f55;
+}

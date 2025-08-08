@@ -1,0 +1,20 @@
+{
+  "name": "retro-frontend",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "sortablejs": "^1.x",
+    "uuid": "^9.x"
+  },
+  "devDependencies": {
+    "@types/sortablejs": "^1.15.8",
+    "@types/uuid": "^9.x",
+    "typescript": "^4.x",
+    "vite": "^4.x"
+  }
+}

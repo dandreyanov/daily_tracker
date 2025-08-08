@@ -1,0 +1,125 @@
+// frontend/main.ts
+
+import * as API from './api';
+import { Column, Task } from './types';
+import { createElem, promptTask } from './utils';
+import { initDnd } from './dnd';
+
+async function bootstrap() {
+  let authenticated = false;
+  while (!authenticated) {
+    const user = prompt('Логин:') || '';
+    const pass = prompt('Пароль:') || '';
+    try {
+      await API.login(user, pass);
+      authenticated = true;
+    } catch {
+      alert('Неверные логин или пароль, попробуйте ещё раз.');
+    }
+  }
+  renderBoard();
+}
+
+async function renderBoard() {
+  const board = document.getElementById('board')!;
+  board.innerHTML = '';
+
+  const cols = await API.load();
+
+  // Разметка сетки: 2×2 для канбана + ряд чек-листов остальными
+  const kanbanOrder = ['urgent', 'important', 'today', 'notimp'];
+  const checklists = cols.filter(c => !kanbanOrder.includes(c.id));
+  const totalCols = 2 + checklists.length;
+  const grid = createElem('div', ['board-grid']);
+  Object.assign(grid.style, {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
+    gridTemplateRows: 'auto auto',
+    gap: '16px',
+  });
+  board.append(grid);
+
+  // Рендер 4-х канбан колонок
+  kanbanOrder.forEach((id, idx) => {
+    const col = cols.find(c => c.id === id)!;
+    const cell = renderColumn(col, cols);
+    const row = idx < 2 ? 1 : 2;
+    const colStart = (idx % 2) + 1;
+    Object.assign(cell.style, {
+      gridRow: `${row}`,
+      gridColumn: `${colStart}`,
+    });
+    grid.append(cell);
+  });
+
+  // Рендер чек-листов, растягиваем на 2 ряда
+  checklists.forEach((col, i) => {
+    const cell = renderColumn(col, cols);
+    Object.assign(cell.style, {
+      gridRow: '1 / span 2',
+      gridColumn: `${3 + i}`,
+    });
+    grid.append(cell);
+  });
+
+  initDnd(cols, renderBoard);
+}
+
+function renderColumn(col: Column, allCols: Column[]): HTMLElement {
+  const checklistIds = ['me','home','family','ideal','holidays'];
+
+  const colDiv = createElem('div', ['column']);
+  colDiv.id = `col-${col.id}`;
+  colDiv.classList.add(`column--${col.id}`);
+
+  const title = createElem('h3', [], col.title);
+  colDiv.append(title);
+
+  const ul = createElem('ul', ['task-list']) as HTMLUListElement;
+  col.tasks.forEach((task: Task) => {
+    const li = createElem('li', [], '') as HTMLLIElement;
+    li.setAttribute('data-id', task.id);
+    li.classList.toggle('checked', task.done);
+    li.style.position = 'relative';
+
+    const textSpan = createElem('span', [], task.text);
+    textSpan.style.flex = '1';
+    if (checklistIds.includes(col.id)) {
+      textSpan.addEventListener('click', async () => {
+        task.done = !task.done;
+        col.tasks.sort((a,b) => Number(a.done) - Number(b.done));
+        await API.save(allCols);     // ← используем allCols вместо cols
+        renderBoard();
+      });
+    }
+    li.append(textSpan);
+
+    const delBtn = createElem('button', ['delete-btn'], '×');
+    delBtn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const arr = allCols.find(c => c.id === col.id)!.tasks;
+      const idx = arr.findIndex(t => t.id === task.id);
+      arr.splice(idx, 1);
+      await API.save(allCols);
+      renderBoard();
+    });
+    li.append(delBtn);
+
+    ul.append(li);
+  });
+  colDiv.append(ul);
+
+  const btn = createElem('button', [], 'Добавить');
+  btn.addEventListener('click', async () => {
+    const newTask = await promptTask();
+    if (!newTask) return;
+    col.tasks.push(newTask);
+    await API.save(allCols);
+    renderBoard();
+  });
+  colDiv.append(btn);
+
+  return colDiv;
+}
+
+bootstrap();

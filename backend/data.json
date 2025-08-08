@@ -1,0 +1,52 @@
+[
+  {
+    "id": "urgent",
+    "title": "Важно и срочно",
+    "tasks": []
+  },
+  {
+    "id": "important",
+    "title": "Важно, но не срочно",
+    "tasks": []
+  },
+  {
+    "id": "today",
+    "title": "Не важно, но срочно",
+    "tasks": []
+  },
+  {
+    "id": "notimp",
+    "title": "Не важно и не срочно",
+    "tasks": []
+  },
+  {
+    "id": "day",
+    "title": "В плане на день",
+    "tasks": []
+  },
+  {
+    "id": "me",
+    "title": "Я",
+    "tasks": []
+  },
+  {
+    "id": "home",
+    "title": "Домашние дела",
+    "tasks": []
+  },
+  {
+    "id": "family",
+    "title": "Семья",
+    "tasks": []
+  },
+  {
+    "id": "ideal",
+    "title": "Идеальный день",
+    "tasks": []
+  },
+  {
+    "id": "holidays",
+    "title": "Праздники",
+    "tasks": []
+  }
+]
