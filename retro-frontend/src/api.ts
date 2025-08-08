@@ -1,37 +1,25 @@
-// frontend/api.ts
+// src/api.ts
+
 import { Column } from './types';
-
-let token: string | null = null;
-
-export async function login(username: string, password: string): Promise<void> {
-  const res = await fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
-  if (!res.ok) throw new Error('Invalid credentials');
-  const data = await res.json();
-  token = data.token;
-}
+const STORAGE_KEY = 'tasktracker-board';
 
 export async function load(): Promise<Column[]> {
-  if (!token) throw new Error('No auth token');
-  const res = await fetch('/api/board', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error('Failed to load board');
-  return res.json();
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) return JSON.parse(raw);
+  return [
+    { id: 'urgent',    title: 'Важно и срочно',    tasks: [] },
+    { id: 'important', title: 'Важно, но не срочно', tasks: [] },
+    { id: 'today',     title: 'Не важно, но срочно', tasks: [] },
+    { id: 'notimp',    title: 'Не важно и не срочно', tasks: [] },
+    { id: 'day',       title: 'В плане на сегодня',  tasks: [] },
+    { id: 'me',        title: 'Я',                   tasks: [] },
+    { id: 'home',      title: 'Домашние дела',       tasks: [] },
+    { id: 'family',    title: 'Семья',               tasks: [] },
+    { id: 'ideal',     title: 'Идеальный день',      tasks: [] },
+    { id: 'holidays',  title: 'Праздники',           tasks: [] },
+  ];
 }
 
 export async function save(cols: Column[]): Promise<void> {
-  if (!token) throw new Error('No auth token');
-  const res = await fetch('/api/board', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(cols),
-  });
-  if (!res.ok) throw new Error('Failed to save board');
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cols));
 }

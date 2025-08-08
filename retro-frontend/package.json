@@ -1,12 +1,14 @@
 {
   "name": "retro-frontend",
-  "version": "0.0.0",
-  "type": "module",
+  "homepage": "https://dandreyanov.github.io/daily_tracker",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
+  "version": "0.0.0",
+  "type": "module",
   "dependencies": {
     "sortablejs": "^1.x",
     "uuid": "^9.x"
@@ -14,6 +16,7 @@
   "devDependencies": {
     "@types/sortablejs": "^1.15.8",
     "@types/uuid": "^9.x",
+    "gh-pages": "^6.3.0",
     "typescript": "^4.x",
     "vite": "^4.x"
   }
